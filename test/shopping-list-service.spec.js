@@ -88,6 +88,10 @@ describe(`Shopping List Service object`, function () {
         .then(allItems => {
           const expected = testItems
             .filter(item => item.id !== itemId)
+            .map(item => ({
+              ...item,
+              checked: false,
+            }))
           expect(allItems).to.eql(expected)
         })
     })
@@ -102,7 +106,7 @@ describe(`Shopping List Service object`, function () {
       }
       const originalItem = testItems[idOfItemToUpdate - 1]
       return ShoppingListService.updateItem(db, idOfItemToUpdate, newItemData)
-        .then(() => ShoppingListService.getById(db, idOfItemToUpdate))
+        .then(() => ShoppingListService.getItemById(db, idOfItemToUpdate))
         .then(item => {
           expect(item).to.eql({
             id: idOfItemToUpdate,
@@ -121,7 +125,7 @@ describe(`Shopping List Service object`, function () {
         })
     })
 
-    it(`insertItem() inserts an item and resolves the item with an 'id'`, () => {
+    it(`addItem() inserts an item and resolves the item with an 'id'`, () => {
       const newItem = {
         name: 'Test new name name',
         price: '5.05',
@@ -129,7 +133,7 @@ describe(`Shopping List Service object`, function () {
         checked: true,
         category: 'Lunch',
       }
-      return ShoppingListService.insertItem(db, newItem)
+      return ShoppingListService.addItem(db, newItem)
         .then(actual => {
           expect(actual).to.eql({
             id: 1,

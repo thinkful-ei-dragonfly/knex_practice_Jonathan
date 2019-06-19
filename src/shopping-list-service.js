@@ -19,17 +19,18 @@ const ShoppingListService = {
     return knex
       .insert(item)
       .into('shopping_list')
-      .returning('*');
+      .returning('*')
+      .then(rows => rows[0])
   },
 
   updateItem(knex, id, newItem) {
-    return knex
+    return knex('shopping_list')
       .where({ id })
       .update(newItem);
   },
   
   deleteItem(knex, id) {
-    return knex
+    return knex('shopping_list')
       .where({ id })
       .delete();
   }
